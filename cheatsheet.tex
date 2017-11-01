@@ -1,0 +1,302 @@
+\documentclass[landscape]{article}
+%ss[10pt,landscape]{article}
+\usepackage{multicol}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage[landscape]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\usepackage{color,graphicx,overpic}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\usepackage{enumerate}
+\usepackage{listings}
+
+
+
+\pdfinfo{
+/Title (ruby_cheat_sheet.pdf)
+/Creator (TeX)
+/Producer (pdfTeX 1.40.0)
+/Author (Nate Holland)
+/Subject (Ruby)
+/Keywords (pdflatex, latex,pdftex,tex)}
+
+% This sets page margins to .5 inch if using letter paper, and to 1cm
+% if using A4 paper. (This probably isn't strictly necessary.)
+% If using another size paper, use default 1cm margins.
+\ifthenelse{\lengthtest { \paperwidth = 11in}}
+    { \geometry{top=.3in,left=.3in,right=.3in,bottom=.3in} }
+    {\ifthenelse{ \lengthtest{ \paperwidth = 297mm}}
+        {\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+        {\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+    }
+
+% Turn off header and footer
+\pagestyle{empty}
+
+% Redefine section commands to use less space
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+                            {-1ex plus -.5ex minus -.2ex}%
+                            {0.5ex plus .2ex}%x
+                            {\normalfont\large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+                            {-1explus -.5ex minus -.2ex}%
+                            {0.5ex plus .2ex}%
+                            {\normalfont\normalsize\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+                            {-1ex plus -.5ex minus -.2ex}%
+                            {1ex plus .2ex}%
+                            {\normalfont\small\bfseries}}
+\makeatother
+
+% Define BibTeX command
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+% Don't print section numbers
+\setcounter{secnumdepth}{0}
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+
+%My Environments
+\newtheorem{example}[section]{Example}
+% -----------------------------------------------------------------------
+
+\def\ci{\perp\!\!\!\perp}
+
+
+
+\begin{document}
+\raggedright
+\footnotesize
+\begin{multicols}{3}
+
+
+% multicol parameters
+% These lengths are set only within the two main columns
+%\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+\begin{center}
+    \Large{\underline{Ruby Cheat Sheet}} \\
+\end{center}
+
+\subsection*{Conditionals}
+
+Ruby conditionals are pretty straigtforward:
+\begin{lstlisting}
+if expression
+  ...
+elsif another_expression
+  ...
+else
+  ...
+end
+\end{lstlisting}
+
+Ruby also has unless, which is like not if:
+
+\begin{lstlisting}
+unless it_is_safe
+  stay_home
+end
+\end{lstlisting}
+
+One nice thing in Ruby is the post-fix if which works like this:
+
+\begin{lstlisting}
+go_outside if it_is_safe
+\end{lstlisting}
+
+\subsection*{Iteration and Enumerables}
+
+In Ruby you normally do not use a for or while loop.
+Instead in Ruby you use $.each$ to iterate over an enumerable
+which is an object that yields elements one at a time.
+
+\begin{lstlisting}
+[1, 2, 3].each do |element|
+  puts element
+end
+\end{lstlisting}
+
+You can even iterate through things like hashes with this method.
+
+\begin{lstlisting}
+{foo: "bar", baz: "bang"}.each do |key, value|
+  puts key
+  puts value
+end
+\end{lstlisting}
+
+There are of course more traditional ways to loop in Ruby.
+While loops get used occasionally:
+
+\begin{lstlisting}
+while expression do
+  do_some_work
+end
+
+loop do
+  do_some_work
+  break if i_want_to_quit
+end
+\end{lstlisting}
+
+
+\subsection*{Functions and Classes}
+
+In Ruby the key words for creating new objects are "new" and "initialize".
+Then normal methods are defined with the standard syntax and class methods have
+a "self." in the function name.
+Functions that end in a question mark return a boolean by convention and methods
+that end in a bang alter the state of the original object.
+
+\begin{lstlisting}
+class Transporter
+  def initialize
+    puts "starting up"
+  end
+
+  def beam_me_up
+    puts "eye eye"
+  end
+
+  def self.model
+    puts "Transporter2000"
+  end
+end
+> t = Transporter.new
+starting up
+> t.beam_me_up
+eye eye
+> Transporter.model
+Transporter2000
+\end{lstlisting}
+
+\subsection*{Arrays and Hashes}
+
+The two most common primitive objects you will work with in Ruby are Arrays and
+Hashes.
+Since Ruby is dynamically typed you can put whatever objects into the array and
+into the keys or values of the hash.
+You can even use random objects as keys in a Hash.
+
+\begin{lstlisting}
+array = []
+array << 3 # this is called the shovel operator
+array[0]
+ => 3
+array.map { |x| x**2 }
+ => [9]
+
+hash = {}
+hash[:foo] = "bar"
+hash.merge!({1 => "one"})
+ => {:foo=>"bar", 1=>"one"}
+\end{lstlisting}
+
+\subsection*{Strings and Symbols}
+
+In Ruby everything is an object, including Strings.
+Because of this every String has a different object ID and a different place in
+memory.
+Therefore Ruby also has symbols which are like strings but they are imutable and
+only have one instance in memory.
+In ruby you can also use \#\{\} to do string iterpolation.
+
+\begin{lstlisting}
+:symbol
+"string"
+"2 squared is #{2**2}"
+ => "2 squared is 4"
+\end{lstlisting}
+
+\subsection*{Blocks and Yields}
+
+One of the unique aspects of Ruby is how blocks and yields work.
+This is what powers the ".each" method we saw with iteration but it can also
+be used for a lot of other things.
+A yield is where the method takes in a block as a sort of parameter and yields
+control to the block which has a lot of uses.
+
+\begin{lstlisting}
+def double_and_calc(a, b)
+  a = a * 2; b = b * 2
+  yield(a, b)
+end
+
+double_and_calc(2, 3) { |a, b| a + b }
+ => 10
+double_and_calc(2, 1) do |a, b|
+  a ** b # a raised to b power
+end
+ => 16
+\end{lstlisting}
+
+\subsection*{Gems and Bundling}
+
+In Ruby packages of code are called gems.
+They can either be installed manually or they can be listed in a project
+as part of a Gemfile.
+
+\begin{lstlisting}
+# in terminal
+gem install "pry"
+# inside Gemfile
+gem "pry"
+\end{lstlisting}
+
+\subsection*{Debugging}
+
+One of the most common ways to debug is to use a REPL (Read-Eval-Print-Loop) tool.
+A common tool for this is the pry gem.
+To debug a user puts a call to a debugger tool like pry in the middle of their
+code and then they can poke around in the code.
+One helpful rubyism is that you can call "method(:method\_name).source\_location"
+and Ruby will show you exactly where that method is defined.
+
+\begin{lstlisting}
+def some_method
+  binding.pry
+  troublesome_method_call
+end
+
+> troublesome_method_call
+ => StandardError
+> method(:troublesome_method_call).source_location
+ => "/user/code/app/models/something.rb#27"
+\end{lstlisting}
+
+\subsection*{Implicit Return}
+
+Ruby doesn't require an explicate return, which can sometimes confuse developers
+from other languages.
+These two methods are identical.
+
+\begin{lstlisting}
+def square_no_return(x)
+  x ** 2
+end
+
+def square_with_return(x)
+  return x ** 2
+end
+\end{lstlisting}
+
+
+
+\rule{0.3\linewidth}{0.25pt}
+\newpage
+\scriptsize
+\bibliographystyle{abstract}
+\bibliography{refFile}
+\end{multicols}
+\end{document}
